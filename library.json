@@ -1,0 +1,16 @@
+{
+  "name": "touchArea",
+  "version": "2.0.0",
+  "description": "library to handle touch events on LCD display",
+  "keywords": "touch, event, LCD",
+  "authors":
+  [
+    {
+      "name": "Jochen Kober"
+    }
+  ],
+  "license": "MIT",
+  "frameworks": "Arduino",
+  "headers": ["touchArea.h"],
+  "platforms": "*"
+}

@@ -17,8 +17,8 @@ typedef struct {
   uint16_t x_max;
   uint16_t y_min;
   uint16_t y_max;
-  void (*isClickedCallback)(uint8_t);
-  void (*isReleasedCallback)(uint8_t);
+  void (*isClickedCallback)(uint8_t, uint16_t, uint16_t);
+  void (*isReleasedCallback)(uint8_t, uint16_t, uint16_t);
   uint8_t tag;
   bool isDown;
 } touchArea_t;
@@ -32,8 +32,8 @@ class touchArea
 
     void clearAllItems(void);
     uint8_t getItemCount(void) const;
-    bool  addItem(uint16_t x_min, uint16_t y_min, uint16_t x_max, uint16_t y_max, uint8_t tag, void (*isClickedFunc)(uint8_t), void (*isReleasedFunc)(uint8_t)),
-          addItem(uint16_t x_min, uint16_t y_min, uint16_t x_max, uint16_t y_max, uint8_t tag, void (*isClickedFunc)(uint8_t));
+    bool  addItem(uint16_t x_min, uint16_t y_min, uint16_t x_max, uint16_t y_max, uint8_t tag, void (*isClickedFunc)(uint8_t, uint16_t, uint16_t), void (*isReleasedFunc)(uint8_t, uint16_t, uint16_t)),
+          addItem(uint16_t x_min, uint16_t y_min, uint16_t x_max, uint16_t y_max, uint8_t tag, void (*isClickedFunc)(uint8_t, uint16_t, uint16_t));
     void setLostFocusCallback(void (*onLostFocusFunc)(void));
     bool isClicked(uint16_t x, uint16_t y);
     bool isReleased(uint16_t x, uint16_t y);

@@ -42,7 +42,7 @@ void touchArea::getItem(uint8_t index, uint16_t *xmin, uint16_t *ymin, uint16_t 
 ** Function name:           addItem
 ** Description:             add a touch area to list with clicked and released function
 ***************************************************************************************/
-bool touchArea::addItem(uint16_t x_min, uint16_t y_min, uint16_t x_max, uint16_t y_max, uint8_t tag, void (*isClickedFunc)(uint8_t, uint16_t, uint16_t), void (*isReleasedFunc)(uint8_t, uint16_t, uint16_t)=NULL) {
+bool touchArea::addItem(uint16_t x_min, uint16_t y_min, uint16_t x_max, uint16_t y_max, uint8_t tag, void (*isClickedFunc)(uint8_t), void (*isReleasedFunc)(uint8_t, uint16_t, uint16_t)=NULL) {
   // check for overrun
   if (_count == MAX_TOUCH_AREA_COUNT - 1) return(false);
   
@@ -63,14 +63,14 @@ bool touchArea::addItem(uint16_t x_min, uint16_t y_min, uint16_t x_max, uint16_t
 ** Function name:           addItem
 ** Description:             add a touch area to list with clicked function only
 ***************************************************************************************/
-bool touchArea::addItem(uint16_t x_min, uint16_t y_min, uint16_t x_max, uint16_t y_max, uint8_t tag, void (*isClickedFunc)(uint8_t, uint16_t, uint16_t)) {
+bool touchArea::addItem(uint16_t x_min, uint16_t y_min, uint16_t x_max, uint16_t y_max, uint8_t tag, void (*isClickedFunc)(uint8_t)) {
   return(addItem(x_min, y_min, x_max, y_max, tag, isClickedFunc, NULL));
 }
 
 
 /***************************************************************************************
-** Function name:           addItem
-** Description:             add a touch area to list with clicked function only
+** Function name:           getActionPostion
+** Description:             get position of last action (click or release)
 ***************************************************************************************/
 void getActionPostion(uint16_t *x, uint16_t *y) {
   *x = _lastX;

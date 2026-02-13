@@ -1,6 +1,6 @@
 {
   "name": "touchArea",
-  "version": "3.0.1",
+  "version": "3.0.3",
   "description": "library to handle touch events on LCD display",
   "keywords": "touch, event, LCD",
   "authors":

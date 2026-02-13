@@ -42,7 +42,7 @@ void touchArea::getItem(uint8_t index, uint16_t *xmin, uint16_t *ymin, uint16_t 
 ** Function name:           addItem
 ** Description:             add a touch area to list with clicked and released function
 ***************************************************************************************/
-bool touchArea::addItem(uint16_t x_min, uint16_t y_min, uint16_t x_max, uint16_t y_max, uint8_t tag, void (*isClickedFunc)(uint8_t), void (*isReleasedFunc)(uint8_t, uint16_t, uint16_t)=NULL) {
+bool touchArea::addItem(uint16_t x_min, uint16_t y_min, uint16_t x_max, uint16_t y_max, uint8_t tag, void (*isClickedFunc)(uint8_t), void (*isReleasedFunc)(uint8_t)=NULL) {
   // check for overrun
   if (_count == MAX_TOUCH_AREA_COUNT - 1) return(false);
   
@@ -72,7 +72,7 @@ bool touchArea::addItem(uint16_t x_min, uint16_t y_min, uint16_t x_max, uint16_t
 ** Function name:           getActionPostion
 ** Description:             get position of last action (click or release)
 ***************************************************************************************/
-void getActionPostion(uint16_t *x, uint16_t *y) {
+void touchArea::getActionPostion(uint16_t *x, uint16_t *y) {
   *x = _lastX;
   *y = _lastY;
 }
@@ -109,7 +109,7 @@ bool touchArea::checkEvent(uint16_t x, uint16_t y, bool release = false) {
         _touchArea[loop].isDown = true;
         if (_touchArea[loop].isClickedCallback != NULL) {
           // call function
-          _touchArea[loop].isClickedCallback(_touchArea[loop].tag, x, y);
+          _touchArea[loop].isClickedCallback(_touchArea[loop].tag);
           return(true);
         }
       }
@@ -126,7 +126,7 @@ bool touchArea::checkEvent(uint16_t x, uint16_t y, bool release = false) {
           _touchArea[loop].isDown = false;
           if (_touchArea[loop].isReleasedCallback != NULL) {
             // call function
-            _touchArea[loop].isReleasedCallback(_touchArea[loop].tag, x, y);
+            _touchArea[loop].isReleasedCallback(_touchArea[loop].tag);
             return(true);
           }
         }

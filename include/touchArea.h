@@ -38,8 +38,9 @@ class touchArea
     bool isClicked(uint16_t x, uint16_t y);
     bool isReleased(uint16_t x, uint16_t y);
 
-    // added V3.0.1
-    void getActionPostion(uint16_t *x, uint16_t *y);
+    // added V3.x.x
+    void getActionPositionAbs(uint16_t *x, uint16_t *y);
+    void getActionPositionRel(uint16_t *x, uint16_t *y);
 
     // function can be used for debugging
     void getItem(uint8_t index, uint16_t *xmin, uint16_t *ymin, uint16_t *xmax, uint16_t *ymax);
@@ -51,6 +52,7 @@ class touchArea
     touchArea_t _touchArea[MAX_TOUCH_AREA_COUNT];
     uint8_t _count = 0;
     uint16_t _lastX, _lastY;
+    uint16_t _lastRelX, _lastRelY;
     void (*_onLostFocusCallback)(void);
 
   protected:

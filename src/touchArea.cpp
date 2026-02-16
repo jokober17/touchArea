@@ -38,6 +38,7 @@ void touchArea::getItem(uint8_t index, uint16_t *xmin, uint16_t *ymin, uint16_t 
   *ymax = _touchArea[index].y_max;
 }
 
+
 /***************************************************************************************
 ** Function name:           addItem
 ** Description:             add a touch area to list with clicked and released function
@@ -69,15 +70,6 @@ bool touchArea::addItem(uint16_t x_min, uint16_t y_min, uint16_t x_max, uint16_t
 
 
 /***************************************************************************************
-** Function name:           getActionPostion
-** Description:             get position of last action (click or release)
-***************************************************************************************/
-void touchArea::getActionPostion(uint16_t *x, uint16_t *y) {
-  *x = _lastX;
-  *y = _lastY;
-}
-
-/***************************************************************************************
 ** Function name:           setLostFocusCallback
 ** Description:             set callback function which will be called if area focus is lost
 ***************************************************************************************/
@@ -99,8 +91,6 @@ bool touchArea::checkEvent(uint16_t x, uint16_t y, bool release = false) {
     //   Serial.printf(" [%2d]: Xmin: %3d, Ymin: %3d, Xmax: %3d, Ymax: %3d\n", loop, _touchArea[loop].x_min, _touchArea[loop].y_min, _touchArea[loop].x_max, _touchArea[loop].y_max);
     // }
 
-  _lastX = x;
-  _lastY = y;
 
   if (release == false) {
     for (loop=0; loop<_count; loop++) {

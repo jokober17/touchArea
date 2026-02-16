@@ -7,6 +7,9 @@
 ** Description:             
 ***************************************************************************************/
 touchArea::touchArea(void) {
+  _lastX = _lastY = 0;
+  _lastRelX = _lastRelY = 0;
+
   clearAllItems();
 }
 
@@ -37,7 +40,6 @@ void touchArea::getItem(uint8_t index, uint16_t *xmin, uint16_t *ymin, uint16_t 
   *ymin = _touchArea[index].y_min;
   *ymax = _touchArea[index].y_max;
 }
-
 
 /***************************************************************************************
 ** Function name:           addItem
@@ -70,6 +72,33 @@ bool touchArea::addItem(uint16_t x_min, uint16_t y_min, uint16_t x_max, uint16_t
 
 
 /***************************************************************************************
+** Function name:           getActionPositionAbs
+** Description:             get position of last action (click or release) in abs coords
+***************************************************************************************/
+void touchArea::getActionPositionAbs(uint16_t *x, uint16_t *y) {
+  *x = _lastX;
+  *y = _lastY;
+}
+
+/***************************************************************************************
+** Function name:           getActionPositionRel
+** Description:             get position of last action (click or release) relative to touch area
+***************************************************************************************/
+void touchArea::getActionPositionRel(uint16_t *x, uint16_t *y) {
+  *x = _lastRelX;
+  *y = _lastRelY;
+}
+
+/***************************************************************************************
+** Function name:           getActionPostion
+** Description:             get position of last action (click or release)
+***************************************************************************************/
+void touchArea::getActionPositionAbs(uint16_t *x, uint16_t *y) {
+  *x = _lastX;
+  *y = _lastY;
+}
+
+/***************************************************************************************
 ** Function name:           setLostFocusCallback
 ** Description:             set callback function which will be called if area focus is lost
 ***************************************************************************************/
@@ -91,12 +120,16 @@ bool touchArea::checkEvent(uint16_t x, uint16_t y, bool release = false) {
     //   Serial.printf(" [%2d]: Xmin: %3d, Ymin: %3d, Xmax: %3d, Ymax: %3d\n", loop, _touchArea[loop].x_min, _touchArea[loop].y_min, _touchArea[loop].x_max, _touchArea[loop].y_max);
     // }
 
+  _lastX = x;
+  _lastY = y;
 
   if (release == false) {
     for (loop=0; loop<_count; loop++) {
       // check coordinates
       if (x >= _touchArea[loop].x_min && x <= _touchArea[loop].x_max && y >= _touchArea[loop].y_min && y <= _touchArea[loop].y_max) {
         _touchArea[loop].isDown = true;
+        _lastRelX = x - _touchArea[loop].x_min;
+        _lastRelY = y - _touchArea[loop].y_min;
         if (_touchArea[loop].isClickedCallback != NULL) {
           // call function
           _touchArea[loop].isClickedCallback(_touchArea[loop].tag);
@@ -114,6 +147,8 @@ bool touchArea::checkEvent(uint16_t x, uint16_t y, bool release = false) {
       if (x >= _touchArea[loop].x_min && x <= _touchArea[loop].x_max && y >= _touchArea[loop].y_min && y <= _touchArea[loop].y_max) {
         if (_touchArea[loop].isDown == true){
           _touchArea[loop].isDown = false;
+          _lastRelX = x - _touchArea[loop].x_min;
+          _lastRelY = y - _touchArea[loop].y_min;
           if (_touchArea[loop].isReleasedCallback != NULL) {
             // call function
             _touchArea[loop].isReleasedCallback(_touchArea[loop].tag);

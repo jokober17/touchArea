@@ -90,15 +90,6 @@ void touchArea::getActionPositionRel(uint16_t *x, uint16_t *y) {
 }
 
 /***************************************************************************************
-** Function name:           getActionPostion
-** Description:             get position of last action (click or release)
-***************************************************************************************/
-void touchArea::getActionPositionAbs(uint16_t *x, uint16_t *y) {
-  *x = _lastX;
-  *y = _lastY;
-}
-
-/***************************************************************************************
 ** Function name:           setLostFocusCallback
 ** Description:             set callback function which will be called if area focus is lost
 ***************************************************************************************/

@@ -123,10 +123,7 @@ bool touchArea::checkEvent(uint16_t x, uint16_t y, bool release = false) {
         if (loop != lastDownIndex) {
           lastDownIndex = loop;
           _clickDownTime = millis();
-          Serial.printf("Time start: %d\n", _clickDownTime);
         }
-        
-        
         _lastRelX = x - _touchArea[loop].x_min;
         _lastRelY = y - _touchArea[loop].y_min;
         if (_touchArea[loop].isClickedCallback != NULL) {
@@ -146,10 +143,8 @@ bool touchArea::checkEvent(uint16_t x, uint16_t y, bool release = false) {
       if (x >= _touchArea[loop].x_min && x <= _touchArea[loop].x_max && y >= _touchArea[loop].y_min && y <= _touchArea[loop].y_max) {
         if (_touchArea[loop].isDown == true){
           _touchArea[loop].isDown = false;
-          Serial.printf("Time end: %d\n", millis());
           _clickDownTime = millis() - _clickDownTime;
           lastDownIndex = 255;
-          Serial.printf("Time elapsed: %d\n", _clickDownTime);
           _lastRelX = x - _touchArea[loop].x_min;
           _lastRelY = y - _touchArea[loop].y_min;
           if (_touchArea[loop].isReleasedCallback != NULL) {

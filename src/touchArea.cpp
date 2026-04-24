@@ -7,6 +7,9 @@
 ** Description:             
 ***************************************************************************************/
 touchArea::touchArea(void) {
+  _lastX = _lastY = 0;
+  _lastRelX = _lastRelY = 0;
+
   clearAllItems();
 }
 
@@ -42,7 +45,7 @@ void touchArea::getItem(uint8_t index, uint16_t *xmin, uint16_t *ymin, uint16_t 
 ** Function name:           addItem
 ** Description:             add a touch area to list with clicked and released function
 ***************************************************************************************/
-bool touchArea::addItem(uint16_t x_min, uint16_t y_min, uint16_t x_max, uint16_t y_max, uint8_t tag, void (*isClickedFunc)(uint8_t, uint16_t, uint16_t), void (*isReleasedFunc)(uint8_t, uint16_t, uint16_t)=NULL) {
+bool touchArea::addItem(uint16_t x_min, uint16_t y_min, uint16_t x_max, uint16_t y_max, uint8_t tag, void (*isClickedFunc)(uint8_t), void (*isReleasedFunc)(uint8_t)=NULL) {
   // check for overrun
   if (_count == MAX_TOUCH_AREA_COUNT - 1) return(false);
   
@@ -63,18 +66,27 @@ bool touchArea::addItem(uint16_t x_min, uint16_t y_min, uint16_t x_max, uint16_t
 ** Function name:           addItem
 ** Description:             add a touch area to list with clicked function only
 ***************************************************************************************/
-bool touchArea::addItem(uint16_t x_min, uint16_t y_min, uint16_t x_max, uint16_t y_max, uint8_t tag, void (*isClickedFunc)(uint8_t, uint16_t, uint16_t)) {
+bool touchArea::addItem(uint16_t x_min, uint16_t y_min, uint16_t x_max, uint16_t y_max, uint8_t tag, void (*isClickedFunc)(uint8_t)) {
   return(addItem(x_min, y_min, x_max, y_max, tag, isClickedFunc, NULL));
 }
 
 
 /***************************************************************************************
-** Function name:           addItem
-** Description:             add a touch area to list with clicked function only
+** Function name:           getActionPositionAbs
+** Description:             get position of last action (click or release) in abs coords
 ***************************************************************************************/
-void getActionPostion(uint16_t *x, uint16_t *y) {
+void touchArea::getActionPositionAbs(uint16_t *x, uint16_t *y) {
   *x = _lastX;
   *y = _lastY;
+}
+
+/***************************************************************************************
+** Function name:           getActionPositionRel
+** Description:             get position of last action (click or release) relative to touch area
+***************************************************************************************/
+void touchArea::getActionPositionRel(uint16_t *x, uint16_t *y) {
+  *x = _lastRelX;
+  *y = _lastRelY;
 }
 
 /***************************************************************************************
@@ -108,9 +120,11 @@ bool touchArea::checkEvent(uint16_t x, uint16_t y, bool release = false) {
       if (x >= _touchArea[loop].x_min && x <= _touchArea[loop].x_max && y >= _touchArea[loop].y_min && y <= _touchArea[loop].y_max) {
         _touchArea[loop].isDown = true;
         _clickDownTime = millis();
+        _lastRelX = x - _touchArea[loop].x_min;
+        _lastRelY = y - _touchArea[loop].y_min;
         if (_touchArea[loop].isClickedCallback != NULL) {
           // call function
-          _touchArea[loop].isClickedCallback(_touchArea[loop].tag, x, y);
+          _touchArea[loop].isClickedCallback(_touchArea[loop].tag);
           return(true);
         }
       }
@@ -126,9 +140,11 @@ bool touchArea::checkEvent(uint16_t x, uint16_t y, bool release = false) {
         if (_touchArea[loop].isDown == true){
           _touchArea[loop].isDown = false;
           _clickDownTime = millis() - _clickDownTime;
+          _lastRelX = x - _touchArea[loop].x_min;
+          _lastRelY = y - _touchArea[loop].y_min;
           if (_touchArea[loop].isReleasedCallback != NULL) {
             // call function
-            _touchArea[loop].isReleasedCallback(_touchArea[loop].tag, x, y);
+            _touchArea[loop].isReleasedCallback(_touchArea[loop].tag);
             return(true);
           }
         }
@@ -163,7 +179,7 @@ bool touchArea::isReleased(uint16_t x, uint16_t y) {
 **                          only valid to call after release of touch area
 ***************************************************************************************/
 bool touchArea::isLongPressed(uint16_t longPressTime) {
-  if (_clickdownTime >= longPressTime) return(true);
+  if (_clickDownTime >= longPressTime) return(true);
   else 
     return(false);
 }
